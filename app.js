@@ -8,12 +8,6 @@ var bodyParser = require('body-parser');
 var cocheras = require('./controllers/cocherasController');
 var db = require('./connection');
 
-var distance = require("google-distance-matrix");
-distance.key('AIzaSyCn5iMy9WIvgb2fEusbRJJfGVaMZ0wZzHY');
-
-// var est = require("./estacionamiento");
-var misEstacionamientos = [];
-
 var cocherasR = require('./routes/cocheras');
 
 var app = express();
@@ -59,98 +53,16 @@ app.use(function(err, req, res, next) {
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
-  console.log("conectado a Trapito");
 
   cocheras.inicializarCocheras()
     .then(function(rdo) {
-      misEstacionamientos = rdo;
-      console.log("mis estacionamientos: ", rdo);
     }, function(err) {
-      console.log("erro: ", err);
+      console.log("error: ", err);
     });
 
 });
 
 app.use('/', cocherasR);
-
-app.post('/estacionamientos', function(req, res) {
-
-  cocheras.listCocheras()
-    .then(function(cocheras) {
-      misEstacionamientos = cocheras;
-
-      // var origins = ['Robinson 854, José Marmol, Buenos Aires, Argentina'];
-      var origins = [];
-      origins.push(req.body.lugar);
-      var destinations = [];
-      var destinationsId = [];
-
-
-      // Llenar matriz destinos
-      for (var i = 0; i < misEstacionamientos.length; i++) {
-        if (misEstacionamientos[i].disponible == true) {
-          destinations.push(misEstacionamientos[i].latitud + ',' + misEstacionamientos[i].longitud);
-          destinationsId.push(misEstacionamientos[i]);
-        }
-      }
-
-      // var destinations = ['-34.7981467,-58.3957462','-34.797831,-58.384435','-34.803151,-58.386324'];
-      var rdoMatrix = [];
-
-      distance.matrix(origins, destinations, function(err, distances) {
-        if (!err) {
-          for (var i = 0; i < destinations.length; i++) {
-            rdoMatrix.push({
-              lugar: destinationsId[i],
-              distancia: distances.rows[0].elements[i]
-            });
-          }
-        }
-
-        // Ordenar Matrix 
-
-        for (var i = 0; i < rdoMatrix.length && i < 3; i++) {
-          for (var j = i + 1; j < rdoMatrix.length; j++) {
-            if (rdoMatrix[j].distancia.distance.value < rdoMatrix[i].distancia.distance.value) {
-
-              var aux = rdoMatrix[i];
-              rdoMatrix[i] = rdoMatrix[j];
-              rdoMatrix[j] = aux;
-
-            }
-          }
-        }
-
-        var masCercanos = [];
-        for (var i = 0; i < rdoMatrix.length && i < 3; i++) {
-          masCercanos.push(rdoMatrix[i]);
-        }
-
-        // console.log(JSON.stringify(rdoMatrix,null,'\t'));
-
-        res.send(masCercanos);
-
-      });
-
-
-
-    }, function(err) {
-      console.log("error", err);
-    });
-
-
-
-  var estLibres = [];
-
-  for (var i = 0; i < misEstacionamientos.length; i++) {
-    if (misEstacionamientos[i].disponible == true)
-      estLibres.push(misEstacionamientos[i]);
-  }
-
-
-
-});
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
