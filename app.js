@@ -50,12 +50,12 @@ app.use(function(err, req, res, next) {
 });
 
 // DB
-
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
 
   cocheras.inicializarCocheras()
-    .then(function(rdo) {
+    .then((rdo)=> {
+      console.log('cocheras: ', rdo);
     }, function(err) {
       console.log("error: ", err);
     });
