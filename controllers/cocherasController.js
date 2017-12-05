@@ -46,9 +46,7 @@ function listCocheras() {
 }
 
 function getCochera (req, res) {
-	console.log('get Cochera');
-	console.log('req: ', req.id);
-	Cocheras.findOne({id:req.id}).exec()
+	Cocheras.findOne({id:req.params.id}).exec()
 	.then((cochera)=>res.send(cochera), function (err) {
 		console.log('error: ', err);
 	})
@@ -64,8 +62,8 @@ function cocherasDisp (req, res){
 } 
 
 function reservar (req, res) {
-	console.log('req: ', req.id);
-	Cocheras.findOne({id:req.id, disponible:true}).exec()
+	console.log('req: ', req);
+	Cocheras.findOne({id:req.params.id, disponible:true}).exec()
 	.then((cochera) => {
 		console.log('cochera: ', cochera);
 		
@@ -170,7 +168,7 @@ function estacionamientosCercanos(req, res) {
 }
 
 function cancelar (req, res) {
-	Cocheras.findOne({id:req.id, disponible:false}).exec()
+	Cocheras.findOne({id:req.params.id, disponible:false}).exec()
 	.then((cochera) => {
 		if (cochera != null){
 			cochera.disponible = true;
@@ -209,7 +207,7 @@ function cancelar (req, res) {
 }
 
 function inicializarCocheras() {
-	return Cocheras.find().exec()
+	Cocheras.find().exec()
 	.then(function (cocheras) {
 		for (var i = 0; i < cocheras.length; i++) {
 			Cocheras.findOne({id:cocheras[i].id}).exec()
@@ -220,8 +218,6 @@ function inicializarCocheras() {
 				console.log("error al gaurdar", err);
 			})
 		}
-		return Cocheras.find().exec();
-
 	},function (err) {
 		console.log("error al inicializar", err);
 

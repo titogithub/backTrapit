@@ -53,12 +53,7 @@ app.use(function(err, req, res, next) {
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
 
-  cocheras.inicializarCocheras()
-    .then((rdo)=> {
-      console.log('cocheras: ', rdo);
-    }, function(err) {
-      console.log("error: ", err);
-    });
+  cocheras.inicializarCocheras();
 
 });
 
