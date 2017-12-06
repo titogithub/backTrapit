@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 Cocheras = require('../models/cocheras');
 var configMail = require('../mailer/config');
-
 // Mail
 var nodemailer = require('nodemailer');
 var mailerhbs = require('nodemailer-express-handlebars');
@@ -10,8 +9,8 @@ var mailerhbs = require('nodemailer-express-handlebars');
 var transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-		user: configMail.usr,
-		pass: configMail.pwd
+		user: configMail.config.usr,
+		pass: configMail.config.pwd
 	}
 });
 
