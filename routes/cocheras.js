@@ -12,4 +12,8 @@ router.get('/reservar/:id', Cocheras.reservar);
 
 router.get('/cancelar/:id', Cocheras.cancelar);
 
+router.get('/trapito', function(req, res) {
+  res.sendFile(path.join(__dirname + '/dist/index.html'));
+});
+
 module.exports = router;
