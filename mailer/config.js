@@ -1,1 +1,1 @@
-exports.config = { usr: 'trapitpark@gmail.com', pwd: 'trapit1234'};
+exports.config = { usr: '', pwd: ''};
