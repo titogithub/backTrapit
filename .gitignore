@@ -2,3 +2,5 @@ db/
 estacionamiento.js
 estacionamientoDB.js
 /node_modules
+mailer/*
+mongodb/*
